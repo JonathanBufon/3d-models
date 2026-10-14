@@ -1,0 +1,9 @@
+# Fotos pessoais (número de série, casa) — ficam só locais
+berco-teclado-casio-ct-s300/fotos-referencia/
+
+# Modelo original de terceiros (sem licença conhecida) — só as edições vão pro repo
+suporte-headphone/Headphone_Stand_1.stl
+suporte-headphone/Headphone_Stand_1.3mf
+suporte-headphone/Headphone_Stand_1.pdf
+
+__pycache__/

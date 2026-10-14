@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" font-family="DejaVu Sans, Arial, sans-serif">
+<defs>
+  <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#9aa3ad" stroke-width="2"/></pattern>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+  <marker id="arR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#d1342f"/></marker>
+  <marker id="arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2e8b57"/></marker>
+</defs>
+<rect width="1600" height="1000" fill="#fbfaf7"/>
+<text x="40" y="52" font-size="30" font-weight="bold" fill="#1d2430">Berço para Casio CT-S300 no suporte X: como funciona</text>
+<line x1="800" y1="80" x2="800" y2="500" stroke="#ddd"/>
+<line x1="40" y1="510" x2="1560" y2="510" stroke="#ddd"/>
+
+<!-- PAINEL 1 -->
+<text x="40" y="100" font-size="20" font-weight="bold" fill="#1d2430">1. Vista de frente (corte sobre um braço)</text>
+<path d="M120,160 H680 L670,180 L690,200 L680,220 L690,240 L670,260 L690,280 L680,300 H120 L130,280 L110,260 L130,240 L110,220 L130,200 L110,180 Z" fill="#2b2f36"/>
+<text x="400" y="235" font-size="18" fill="#fff" text-anchor="middle">fundo do teclado</text>
+<rect x="318" y="300" width="164" height="8" fill="#f2b632"/>
+<path d="M318,308 H482 V386 H462 A62,62 0 0 0 338,386 H318 Z" fill="#3b82c4" stroke="#1f4f7a" stroke-width="2"/>
+<circle cx="400" cy="386" r="60" fill="#555"/>
+<circle cx="400" cy="386" r="46" fill="url(#hatch)" stroke="#888" stroke-width="2"/>
+<!-- rótulos -->
+<line x1="482" y1="304" x2="560" y2="330" stroke="#333"/><text x="565" y="336" font-size="16" fill="#333">fita dupla face (VHB)</text>
+<line x1="470" y1="345" x2="560" y2="370" stroke="#333"/><text x="565" y="376" font-size="16" fill="#1f4f7a" font-weight="bold">berço impresso</text>
+<line x1="440" y1="420" x2="560" y2="440" stroke="#333"/><text x="565" y="440" font-size="16" fill="#333">braço do suporte</text>
+<text x="565" y="460" font-size="14" fill="#666">(tubo + espuma, visto em corte)</text>
+<!-- setas bloqueio lateral -->
+<line x1="300" y1="350" x2="240" y2="350" stroke="#d1342f" stroke-width="3" marker-end="url(#arR)"/>
+<text x="232" y="340" font-size="26" fill="#d1342f" font-weight="bold">✕</text>
+<text x="140" y="390" font-size="15" fill="#d1342f">não escorrega</text>
+<text x="140" y="408" font-size="15" fill="#d1342f">para os lados</text>
+<!-- seta levantar -->
+<line x1="90" y1="300" x2="90" y2="200" stroke="#2e8b57" stroke-width="3" marker-end="url(#arG)"/>
+<text x="50" y="475" font-size="15" fill="#2e8b57">para tirar: só levantar o teclado</text>
+<text x="50" y="493" font-size="15" fill="#2e8b57">(o canal só abraça metade do tubo)</text>
+
+<!-- PAINEL 2 -->
+<text x="830" y="100" font-size="20" font-weight="bold" fill="#1d2430">2. Teclado visto por baixo</text>
+<rect x="1010" y="112" width="22" height="250" fill="#888" opacity="0.55"/>
+<rect x="1358" y="112" width="22" height="250" fill="#888" opacity="0.55"/>
+<rect x="840" y="140" width="698" height="192" rx="18" fill="none" stroke="#2b2f36" stroke-width="3"/>
+<rect x="1005" y="214" width="32" height="45" fill="#3b82c4" stroke="#1f4f7a" stroke-width="2"/>
+<rect x="1353" y="214" width="32" height="45" fill="#3b82c4" stroke="#1f4f7a" stroke-width="2"/>
+<text x="1189" y="132" font-size="14" fill="#555" text-anchor="middle">trás</text>
+<text x="1189" y="352" font-size="14" fill="#555" text-anchor="middle">frente (lado das teclas)</text>
+<text x="1189" y="240" font-size="14" fill="#555" text-anchor="middle">930 × 256 mm</text>
+<line x1="1385" y1="236" x2="1440" y2="236" stroke="#333"/><text x="1445" y="241" font-size="14" fill="#1f4f7a" font-weight="bold">berço</text>
+<line x1="1380" y1="300" x2="1440" y2="300" stroke="#333"/><text x="1445" y="296" font-size="14" fill="#555">braço do</text><text x="1445" y="313" font-size="14" fill="#555">suporte X</text>
+<text x="840" y="395" font-size="15" fill="#333">• 2 peças, uma em cada braço, alinhadas no sentido frente-trás</text>
+<text x="840" y="420" font-size="15" fill="#333">• Apoie o teclado no suporte e marque onde os braços tocam</text>
+<text x="840" y="445" font-size="15" fill="#333">• Cole em área lisa do fundo, fora das ranhuras e dos pés</text>
+<text x="840" y="470" font-size="15" fill="#333">• Posição no desenho é ilustrativa; vale a do seu suporte</text>
+
+<!-- PAINEL 3 -->
+<text x="40" y="550" font-size="20" font-weight="bold" fill="#1d2430">3. Medidas da peça (versão braço Ø30 mm)</text>
+<path d="M336,600 H664 V756 H624 A124,124 0 0 0 376,756 H336 Z" fill="#3b82c4" stroke="#1f4f7a" stroke-width="2"/>
+<text x="326" y="612" font-size="13" fill="#1f4f7a" text-anchor="end">face plana →</text><text x="326" y="629" font-size="13" fill="#1f4f7a" text-anchor="end">colada no teclado</text>
+<!-- cota largura -->
+<line x1="336" y1="580" x2="664" y2="580" stroke="#333" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="500" y="573" font-size="15" text-anchor="middle">41 mm</text>
+<!-- cota altura -->
+<line x1="690" y1="600" x2="690" y2="756" stroke="#333" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="700" y="683" font-size="15">19,5 mm</text>
+<!-- topo -->
+<line x1="500" y1="600" x2="500" y2="632" stroke="#fff" stroke-width="1.5" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="508" y="668" font-size="13" fill="#1d2430">topo 4 mm</text>
+<!-- canal -->
+<line x1="376" y1="790" x2="624" y2="790" stroke="#333" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="500" y="815" font-size="15" text-anchor="middle">canal Ø31 mm (30 do braço + 1 de folga)</text>
+<line x1="336" y1="770" x2="376" y2="770" stroke="#333" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="328" y="775" font-size="13" text-anchor="end">parede 5 mm</text>
+<text x="40" y="860" font-size="15" fill="#333">Comprimento: 60 mm (no sentido do braço). O canal é extrudado reto,</text>
+<text x="40" y="882" font-size="15" fill="#333">então a peça é um "U" invertido que senta por cima do tubo.</text>
+
+<!-- PASSOS -->
+<text x="830" y="550" font-size="20" font-weight="bold" fill="#1d2430">Passo a passo</text>
+<g font-size="16" fill="#333">
+<text x="830" y="590">1. Meça o braço do suporte <tspan font-weight="bold">com a espuma</tspan>.</text>
+<text x="830" y="625">2. Escolha o STL (25 / 30 / 32 mm) ou ajuste o .scad.</text>
+<text x="830" y="660">3. Imprima 1 peça de teste deitada pela face plana</text>
+<text x="852" y="682">(PETG, 3–4 paredes, 30% de preenchimento).</text>
+<text x="830" y="717">4. Teste o encaixe no braço; mude a "folga" se precisar.</text>
+<text x="830" y="752">5. Imprima a segunda, limpe o fundo do teclado com álcool</text>
+<text x="852" y="774">isopropílico e cole com fita dupla face de espuma.</text>
+<text x="830" y="809">6. Espere ~24 h antes de apoiar o peso (3,3 kg).</text>
+</g>
+<rect x="830" y="840" width="700" height="62" rx="8" fill="#fff4e0" stroke="#f2b632"/>
+<text x="845" y="866" font-size="15" fill="#6b4a00">Limitação: trava o movimento lateral, não o frente-trás.</text>
+<text x="845" y="888" font-size="15" fill="#6b4a00">Se precisar, dá para fechar uma ponta do canal como batente.</text>
+</svg>
