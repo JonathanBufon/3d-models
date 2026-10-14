@@ -18,8 +18,8 @@
 
 ![montagem](suporte-headphone/montagem.png)
 
-- Tudo em 97% da escala original (para encaixar no topo já impresso). Montado: 240,6 mm.
+- As 3 peças estão em 97% da escala do modelo original e só encaixam entre si se impressas sem redimensionar. Montado: 240,6 mm.
 - Encaixes com 0,2 mm de folga por lado; o perfil triangular impede a haste de girar.
 - **Base:** imprime deitada, sem suporte.
 - **Haste:** imprime em pé (217 mm), sem suporte; use brim de 5–8 mm porque é alta e fina.
-- **Topo:** luva para baixo, como já foi impresso.
+- **Topo:** luva (encaixe) para baixo, com suporte em árvore nas abas curvas; brim de 5 mm.

@@ -12,7 +12,7 @@ import numpy as np
 from manifold3d import CrossSection, JoinType, Manifold, Mesh
 
 ORIGINAL = "../_originais/suporte-headphone/Headphone_Stand_1.stl"
-ESCALA = 0.97            # mesma escala do topo já impresso
+ESCALA = 0.97            # mesma escala do suporte_TOPO.stl
 TOPO_BASE = 13.0         # altura da base no original (mm)
 CORTE_TOPO = 234.05      # altura em que o topo foi cortado no original
 FOLGA = 0.2              # folga por lado no encaixe (igual à luva do topo)
