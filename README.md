@@ -4,7 +4,7 @@
 |---|---|
 | `berco-teclado-casio-ct-s300/` | Berço colado com dupla face sob o Casio CT-S300 para encaixar no braço do suporte X. `berco_teclado.scad` é paramétrico. |
 | `gancho-mochila-mesa/` | Gancho em "J" para mochila, parafusado na lateral da mesa. `gancho.py` gera o STL (`pip install manifold3d numpy`). |
-| `suporte-headphone/` | Suporte de headphone baixado, dividido em 3 peças: `suporte_BASE.stl`, `suporte_HASTE.stl` e `Headphone_Stand_1_TOPO_encaixe.stl` (o modelo original não está no repo; `gerar_partes.py` refaz as peças a partir dele). |
+| `suporte-headphone/` | Suporte de headphone baixado, dividido em 3 peças: `suporte_BASE.stl`, `suporte_HASTE.stl` e `suporte_TOPO.stl` (o modelo original fica em `_originais/`, fora do repo; `gerar_partes.py` refaz base e haste a partir dele). |
 
 ## Gancho de mochila
 

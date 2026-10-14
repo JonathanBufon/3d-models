@@ -1,7 +1,7 @@
 """Divide o suporte de headphone original em BASE + HASTE, compatíveis com o
-Headphone_Stand_1_TOPO_encaixe.stl (topo em 97% com luva de 15 mm).
+suporte_TOPO.stl (topo em 97% com luva de 15 mm).
 
-Requer o modelo original (Headphone_Stand_1.stl, não versionado) e:
+Requer o modelo original em ../_originais/suporte-headphone/ (não versionado) e:
     pip install manifold3d numpy
 Uso: python gerar_partes.py
 """
@@ -11,7 +11,7 @@ import struct
 import numpy as np
 from manifold3d import CrossSection, JoinType, Manifold, Mesh
 
-ORIGINAL = "Headphone_Stand_1.stl"
+ORIGINAL = "../_originais/suporte-headphone/Headphone_Stand_1.stl"
 ESCALA = 0.97            # mesma escala do topo já impresso
 TOPO_BASE = 13.0         # altura da base no original (mm)
 CORTE_TOPO = 234.05      # altura em que o topo foi cortado no original
