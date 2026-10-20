@@ -7,6 +7,7 @@ Peças para impressão 3D com guia de impressão e montagem. Cada pasta tem os S
 | [Berço para teclado no suporte X](#berço-para-teclado-casio-ct-s300-no-suporte-x) | Calço colado sob o teclado Casio CT-S300 que encaixa no braço de um suporte X e impede o teclado de escorregar | 2× `berco_redondo_*.stl` |
 | [Gancho de mochila](#gancho-de-mochila) | Gancho em "J" parafusado na lateral da mesa | 1× `gancho_mochila.stl` |
 | [Suporte de headphone](#suporte-de-headphone) | Suporte de mesa em 3 peças que se encaixam (topo, haste e base) | 3 STLs |
+| [Tampa de webcam (Dell Inspiron 15 3520)](#tampa-de-webcam-dell-inspiron-15-3520) | Clipe que encaixa na borda de cima da tela e cobre a câmera, sem cola | 1× `tampa_webcam_*mm.stl` |
 
 **Gcodes incluídos:** fatiados para Creality Ender-3 V2 (bico 0,4 mm, camada 0,2 mm, PLA). Para outra impressora, fatie o STL de novo.
 
@@ -64,3 +65,27 @@ Três peças que se encaixam sem cola. Montado: 240,6 mm de altura, base 126 × 
 - **Não redimensione no fatiador:** as 3 peças estão em 97% da escala do modelo original e só encaixam entre si nessa escala.
 - **Encaixes:** 0,2 mm de folga por lado. O perfil triangular da haste só entra numa posição e não gira. Se ficar duro, lixe a ponta da haste; se ficar frouxo, uma gota de cola instantânea resolve.
 - **Origem:** derivado de um modelo de terceiros ("Supporto-cuffie", Vinors 3d Lab), que não está no repositório. Com o original em `_originais/suporte-headphone/Headphone_Stand_1.stl`, o `gerar_partes.py` gera a base e a haste de novo (por exemplo, com outra `FOLGA`).
+
+---
+
+## Tampa de webcam (Dell Inspiron 15 3520)
+
+![guia da tampa de webcam](tampa-webcam-dell-inspiron-3520/guia.png)
+
+Tampa de privacidade deslizante em forma de clipe. O "U" abraça a borda de cima da tela e sai sem ferramenta. A aba de trás é inclinada 0,8 mm para dentro e prende o clipe por pressão, sem cola. Na frente há uma janela sobre a câmera e um trilho com uma lingueta: empurrando o pino, o furo da lingueta passa para cima da janela (aberta) ou sai dela (fechada). A lingueta é impressa já dentro do trilho.
+
+**Escolha o arquivo pela espessura da tampa (só a parte da tela, perto da câmera):**
+
+| Espessura | Arquivo |
+|---|---|
+| 5,0 / 5,5 / 6,0 / 6,5 / 7,0 mm | `tampa_webcam_5_0mm.stl` … `tampa_webcam_7_0mm.stl` |
+| Não sabe | imprima `gabarito_espessura.stl` (fendas de 4,5 a 7,5 mm) e use a fenda mais estreita que entra sem forçar |
+| Outra medida | edite `ESPESSURAS_TAMPA` em `tampa.py` e gere de novo |
+
+- **Impressão:** deitado de lado como está no arquivo, com o perfil em "U" sobre a mesa (40 mm de altura), **sem suporte**. PLA ou PETG, camada de 0,12–0,16 mm, 100% de preenchimento. A lingueta tem 0,3 mm de folga em volta: calibre bem a primeira camada, senão ela gruda no clipe. Ao tirar da mesa, empurre o pino para soltá-la.
+- **Uso:** encaixe com o trilho do lado da tela e a janela sobre a câmera. **Tire o clipe antes de fechar o notebook**, porque a frente tem cerca de 3,7 mm e pressionaria a tela.
+- **Ajuste:** clipe frouxo, imprima a medida menor seguinte ou aumente `APERTO`. Lingueta dura, aumente `FOLGA_LING` para 0,35–0,4. Janela fora da câmera, ajuste `JANELA_Y`. Aba invadindo a tela, diminua `FRENTE_ALT`.
+  ```bash
+  pip install manifold3d numpy
+  python tampa.py
+  ```
