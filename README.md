@@ -7,7 +7,7 @@ Peças para impressão 3D com guia de impressão e montagem. Cada pasta tem os S
 | [Berço para teclado no suporte X](#berço-para-teclado-casio-ct-s300-no-suporte-x) | Calço colado sob o teclado Casio CT-S300 que encaixa no braço de um suporte X e impede o teclado de escorregar | 2× `berco_redondo_*.stl` |
 | [Gancho de mochila](#gancho-de-mochila) | Gancho em "J" parafusado na lateral da mesa | 1× `gancho_mochila.stl` |
 | [Suporte de headphone](#suporte-de-headphone) | Suporte de mesa em 3 peças que se encaixam (topo, haste e base) | 3 STLs |
-| [Tampa de webcam (Dell Inspiron 15 3520)](#tampa-de-webcam-dell-inspiron-15-3520) | Clipe que encaixa na borda de cima da tela e cobre a câmera, sem cola | 1× `tampa_webcam_*mm.stl` |
+| [Tampa de webcam (Dell Inspiron 15 3520)](#tampa-de-webcam-dell-inspiron-15-3520) | Clipe com tampa de privacidade deslizante que encaixa na borda da tela, sem cola. Versão normal e versão fina (fecha o notebook) | 1× `normal/tampa_webcam_*mm.stl` ou `fina/tampa_fina_*mm.stl` |
 
 **Gcodes incluídos:** fatiados para Creality Ender-3 V2 (bico 0,4 mm, camada 0,2 mm, PLA). Para outra impressora, fatie o STL de novo.
 
@@ -70,7 +70,16 @@ Três peças que se encaixam sem cola. Montado: 240,6 mm de altura, base 126 × 
 
 ## Tampa de webcam (Dell Inspiron 15 3520)
 
-![guia da tampa de webcam](tampa-webcam-dell-inspiron-3520/guia.png)
+Arquivos organizados em pastas:
+
+| Pasta | Conteúdo |
+|---|---|
+| `normal/` | `tampa_webcam_*mm.stl`, tampa com trilho e pino (frente de ~3,7 mm, tire para fechar o notebook) |
+| `fina/` | `tampa_fina_*mm.stl`, frente de 1,2 mm, fecha o notebook com ela no lugar |
+| `gabaritos/` | `gabarito_espessura.stl` (espessura da tampa da tela) e `laminas_fresta.stl` (fresta com o notebook fechado) |
+| raiz | `tampa.py`, que gera tudo de novo nas pastas acima |
+
+![guia da tampa de webcam](tampa-webcam-dell-inspiron-3520/normal/guia.png)
 
 Tampa de privacidade deslizante em forma de clipe. O "U" abraça a borda de cima da tela e sai sem ferramenta. A aba de trás é inclinada 0,8 mm para dentro e prende o clipe por pressão, sem cola. Na frente há uma janela sobre a câmera e um trilho com uma lingueta: empurrando o pino, o furo da lingueta passa para cima da janela (aberta) ou sai dela (fechada). A lingueta é impressa já dentro do trilho.
 
@@ -78,8 +87,8 @@ Tampa de privacidade deslizante em forma de clipe. O "U" abraça a borda de cima
 
 | Espessura | Arquivo |
 |---|---|
-| 5,0 / 5,5 / 6,0 / 6,5 / 7,0 mm | `tampa_webcam_5_0mm.stl` … `tampa_webcam_7_0mm.stl` |
-| Não sabe | imprima `gabarito_espessura.stl` (fendas de 4,5 a 7,5 mm) e use a fenda mais estreita que entra sem forçar |
+| 5,0 / 5,5 / 6,0 / 6,5 / 7,0 mm | `normal/tampa_webcam_5_0mm.stl` … `normal/tampa_webcam_7_0mm.stl` |
+| Não sabe | imprima `gabaritos/gabarito_espessura.stl` (fendas de 4,5 a 7,5 mm) e use a fenda mais estreita que entra sem forçar |
 | Outra medida | edite `ESPESSURAS_TAMPA` em `tampa.py` e gere de novo |
 
 - **Impressão:** deitado de lado como está no arquivo, com o perfil em "U" sobre a mesa (40 mm de altura), **sem suporte**. PLA ou PETG, camada de 0,12–0,16 mm, 100% de preenchimento. A lingueta tem 0,3 mm de folga em volta: calibre bem a primeira camada, senão ela gruda no clipe. Ao tirar da mesa, empurre o pino para soltá-la.
@@ -89,3 +98,15 @@ Tampa de privacidade deslizante em forma de clipe. O "U" abraça a borda de cima
   pip install manifold3d numpy
   python tampa.py
   ```
+
+### Versão fina: fecha o notebook com a tampa no lugar
+
+![guia da tampa fina](tampa-webcam-dell-inspiron-3520/fina/guia.png)
+
+Mesmo clipe, mas a lingueta fica embutida na própria aba da frente, que tem só 1,2 mm (`FINA_ESP`). As bordas da lingueta e da fenda são em "V" (rabo de andorinha duplo), então ela não sai nem para a frente nem para trás. As pontas a 45° servem de batente e imprimem sem suporte. Não há pino: empurre a lingueta pelas ranhuras, 9,6 mm entre fechada e aberta.
+
+- **Meça a fresta antes:** imprima `gabaritos/laminas_fresta.stl` (0,6 a 1,6 mm; 1 entalhe = 0,6 mm, +0,2 por entalhe). Apoie uma lâmina sobre o teclado, no ponto onde a câmera encosta, e feche a tampa devagar. **Só use a versão fina se a lâmina de 1,2 mm couber sem forçar.** Se a fresta for menor, não use: a tela pode trincar. Nunca force a tampa para fechar.
+- **Arquivo:** `fina/tampa_fina_<espessura>mm.stl`, pela mesma espessura de tampa da versão normal.
+- **Impressão:** deitado de lado como está no arquivo (40 mm de altura), **sem suporte**. PLA ou PETG, camada de 0,08–0,12 mm, bico 0,4, 100% de preenchimento. Ao tirar da mesa, empurre a lingueta com a unha para soltá-la: a ponta de baixo é impressa sobre um vão de 0,5 mm e pode grudar de leve.
+- **Ajuste:** lingueta dura, aumente `FINA_FOLGA` (0,25–0,3). Fresta maior que 1,2 mm, você pode aumentar `FINA_ESP` para deixar a peça mais firme.
+

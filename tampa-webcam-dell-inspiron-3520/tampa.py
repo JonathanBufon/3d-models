@@ -5,15 +5,22 @@ de trás, levemente inclinada para dentro, faz pressão na traseira e segura o
 clipe sem cola. A aba da frente tem uma janela sobre a câmera e um trilho com
 uma lingueta deslizante: com o pino de um lado a câmera fica tampada, do outro
 fica livre. A lingueta é impressa já dentro do trilho (print-in-place).
-Gera tampa_webcam_<espessura>mm.stl para cada espessura em ESPESSURAS_TAMPA
-e um gabarito com fendas para descobrir a espessura real da tampa.
+
+Versão fina (tampa_fina_*): a lingueta fica embutida na própria aba da frente,
+presa por um encaixe em "V" nas bordas, e a aba inteira tem FINA_ESP de
+espessura, para o notebook fechar com o clipe no lugar.
+
+Gera, para cada espessura em ESPESSURAS_TAMPA, normal/tampa_webcam_<esp>mm.stl
+e fina/tampa_fina_<esp>mm.stl; em gabaritos/, um gabarito com fendas para
+descobrir a espessura real da tampa e lâminas para medir a fresta com o
+notebook fechado.
 Requer: pip install manifold3d numpy
 Uso: python tampa.py
 """
 import struct
 
 import numpy as np
-from manifold3d import CrossSection, Manifold
+from manifold3d import CrossSection, JoinType, Manifold
 
 # --- Parâmetros (mm) ---
 ESPESSURAS_TAMPA = (5.0, 5.5, 6.0, 6.5, 7.0)  # espessura da tampa (tela fechada não conta)
@@ -37,18 +44,24 @@ JANELA_Y = -4.0       # centro da janela abaixo da borda da tampa
 CURSO = 9.0           # deslocamento da lingueta entre fechada e aberta
 LING_COMP = 27.0      # comprimento da lingueta
 PINO = (4.0, 0.6)     # largura do pino de puxar e quanto passa dos lábios
+# versão fina
+FINA_ESP = 1.2        # espessura da aba da frente; tem que caber na fresta com o notebook fechado
+FINA_LARGURA = 40
+FINA_FOLGA = 0.2      # folga da lingueta nas bordas em "V"
+FINA_FOLGA_PONTA = 0.5  # folga nas pontas (maior: a ponta de baixo é impressa sobre o vão)
+LAMINAS = (0.6, 0.8, 1.0, 1.2, 1.4, 1.6)
 GABARITO = (4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5)
 SEG = 48
 
 
-def perfil(lid):
+def perfil(lid, frente_esp=FRENTE_ESP):
     """Perfil em XY: tampa do notebook entre x=0 (tela) e x=lid (traseira), borda em y=0."""
     vao = lid + FOLGA
     # abas sobem até o meio da ponte para as peças se fundirem
-    frente = CrossSection.square((FRENTE_ESP, FRENTE_ALT - FRENTE_ESP / 2 + PONTE_ESP / 2)).translate(
-        (-FRENTE_ESP, -FRENTE_ALT + FRENTE_ESP / 2))
-    ponta_frente = CrossSection.circle(FRENTE_ESP / 2, SEG).translate((-FRENTE_ESP / 2, -FRENTE_ALT + FRENTE_ESP / 2))
-    ponte = CrossSection.square((FRENTE_ESP + vao + TRAS_ESP, PONTE_ESP)).translate((-FRENTE_ESP, 0))
+    frente = CrossSection.square((frente_esp, FRENTE_ALT - frente_esp / 2 + PONTE_ESP / 2)).translate(
+        (-frente_esp, -FRENTE_ALT + frente_esp / 2))
+    ponta_frente = CrossSection.circle(frente_esp / 2, SEG).translate((-frente_esp / 2, -FRENTE_ALT + frente_esp / 2))
+    ponte = CrossSection.square((frente_esp + vao + TRAS_ESP, PONTE_ESP)).translate((-frente_esp, 0))
     # aba de trás inclinada: na raiz o vão é lid+FOLGA, na ponta é lid+FOLGA-APERTO
     y_ponta = -TRAS_ALT + TRAS_ESP / 2
     tras = CrossSection([[  # sentido anti-horário
@@ -58,7 +71,7 @@ def perfil(lid):
     ponta_tras = CrossSection.circle(TRAS_ESP / 2, SEG).translate((vao - APERTO + TRAS_ESP / 2, y_ponta))
     # cantos externos da ponte arredondados
     r = PONTE_ESP / 2
-    x0, x1 = -FRENTE_ESP, vao + TRAS_ESP
+    x0, x1 = -frente_esp, vao + TRAS_ESP
     corpo = frente + ponta_frente + ponte + tras + ponta_tras
     for x, sx in ((x0, 1), (x1, -1)):
         canto = CrossSection.square((r, r)).translate((x if sx > 0 else x - r, PONTE_ESP - r))
@@ -108,6 +121,69 @@ def clipe(lid):
     return corpo + ling
 
 
+def pontudo(z0, z1, y0, y1):
+    """Prisma ao longo de X com contorno de frente (Z, Y) em hexágono alongado: pontas a 45° em z0 e z1."""
+    ym, hh = (y0 + y1) / 2, (y1 - y0) / 2
+    return CrossSection([[(z0, ym), (z0 + hh, y0), (z1 - hh, y0), (z1, ym), (z1 - hh, y1), (z0 + hh, y1)]])
+
+
+def em_x(contorno_zy, x0, x1):
+    """Extruda um contorno desenhado em (Z, Y) ao longo de X, de x0 a x1."""
+    return contorno_zy.extrude(x1 - x0).rotate((0, -90, 0)).translate((x1, 0, 0))
+
+
+def clipe_fino(lid):
+    """Clipe com a lingueta embutida na aba da frente, impresso deitado de lado (Z para cima).
+
+    Corte (X, Y): a fenda tem bordas em "V" que entram na aba, e a lingueta tem as
+    bordas em "V" correspondentes; assim ela não sai nem para a frente nem para trás.
+    Vista de frente (Z, Y): fenda e lingueta têm pontas a 45°, que imprimem sem suporte
+    e servem de batente nas duas pontas do curso.
+    """
+    t, g = FINA_ESP, FINA_FOLGA
+    v = t / 2                                   # profundidade do "V", a 45°
+    jw, jh = JANELA
+    jan_y = (JANELA_Y - jh / 2, JANELA_Y + jh / 2)
+    s0, s1 = jan_y[0] - v, jan_y[1] + v         # fenda no meio da espessura; nas faces fica igual à janela
+    hh = (s1 - s0) / 2
+    zc = FINA_LARGURA / 2
+    # lingueta: fechada cobre a janela com sobra de 0,3 mm; aberta, a ponta passa da janela
+    ling0 = zc - jw / 2 - hh - 0.3
+    ling1 = zc + jw / 2 + hh + 0.3
+    curso = (zc + jw / 2 + 0.2) - ling0
+    gp = FINA_FOLGA_PONTA * 2 ** 0.5            # folga na ponta medida ao longo de Z
+    fenda = (ling0 - gp, ling1 + curso + gp)
+    assert s1 < -0.5 and s0 > -FRENTE_ALT + 1.5 and fenda[0] > 2 and fenda[1] < FINA_LARGURA - 2
+
+    perfil_v = CrossSection([[
+        (-t - 1, s0 + v), (-t, s0 + v), (-t / 2, s0), (0, s0 + v), (1, s0 + v),
+        (1, s1 - v), (0, s1 - v), (-t / 2, s1), (-t, s1 - v), (-t - 1, s1 - v),
+    ]])
+    fenda_3d = perfil_v.extrude(FINA_LARGURA + 2).translate((0, 0, -1)) ^ em_x(pontudo(*fenda, s0, s1), -t - 1, 1)
+    corpo = perfil(lid, t).extrude(FINA_LARGURA) - fenda_3d
+
+    hexa = CrossSection([[(-t, s0 + v), (-t / 2, s0), (0, s0 + v), (0, s1 - v), (-t / 2, s1), (-t, s1 - v)]])
+    ling = hexa.offset(-g, JoinType.Miter).extrude(FINA_LARGURA) ^ \
+        em_x(pontudo(ling0, ling1, s0, s1).offset(-0.01, JoinType.Miter), -t - 1, 1)
+    # ranhuras na face da frente para o dedo não escorregar
+    for k in range(-2, 3):
+        z = (ling0 + ling1) / 2 + k * 1.6
+        ling -= caixa(-t - 1, -t + g + 0.2, s0, s1, z - 0.3, z + 0.3)
+    return corpo + ling, curso
+
+
+def laminas():
+    """Lâminas de espessura para medir a fresta entre a moldura e o teclado com o notebook fechado."""
+    pecas = Manifold()
+    for i, e in enumerate(LAMINAS):
+        lam = Manifold.cube((10, 30, e))
+        # entalhes na ponta de trás: 1 entalhe = 0,6 mm, cada entalhe a mais soma 0,2 mm
+        for k in range(i + 1):
+            lam -= Manifold.cube((0.8, 1.5, e + 2)).translate((1 + k * 1.4, 28.5, -1))
+        pecas += lam.translate((i * 13, 0, 0))
+    return pecas
+
+
 def gabarito():
     """Régua com fendas: a que entrar justa na borda da tampa indica qual STL imprimir."""
     passo, prof, alt, esp = 11.0, 8.0, 12.0, 3.0
@@ -143,6 +219,15 @@ def relatorio(m, caminho, nome):
 
 
 if __name__ == "__main__":
+    import os
+
+    for pasta in ("normal", "fina", "gabaritos"):
+        os.makedirs(pasta, exist_ok=True)
     for lid in ESPESSURAS_TAMPA:
-        relatorio(clipe(lid), f"tampa_webcam_{lid:.1f}mm.stl".replace(".", "_", 1), "tampa webcam")
-    relatorio(gabarito(), "gabarito_espessura.stl", "gabarito espessura")
+        nome = f"{lid:.1f}mm.stl".replace(".", "_", 1)
+        relatorio(clipe(lid), f"normal/tampa_webcam_{nome}", "tampa webcam")
+        fino, curso = clipe_fino(lid)
+        relatorio(fino, f"fina/tampa_fina_{nome}", "tampa webcam fina")
+    print(f"curso da lingueta fina: {curso:.1f} mm")
+    relatorio(gabarito(), "gabaritos/gabarito_espessura.stl", "gabarito espessura")
+    relatorio(laminas(), "gabaritos/laminas_fresta.stl", "laminas fresta")
