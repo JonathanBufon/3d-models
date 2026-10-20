@@ -4,7 +4,9 @@ Perfil em "U" invertido que abraça a borda de cima da tampa do notebook. A aba
 de trás, levemente inclinada para dentro, faz pressão na traseira e segura o
 clipe sem cola. A aba da frente tem uma janela sobre a câmera e um trilho com
 uma lingueta deslizante: com o pino de um lado a câmera fica tampada, do outro
-fica livre. A lingueta é impressa já dentro do trilho (print-in-place).
+fica livre. Clipe, lingueta e pino saem na mesma impressão, lado a lado, e são
+montados depois: a lingueta entra pela ponta aberta do trilho e o pino encaixa
+nela pela abertura da frente.
 
 Versão fina (tampa_fina_*): a lingueta fica embutida na própria aba da frente,
 presa por um encaixe em "V" nas bordas, e a aba inteira tem FINA_ESP de
@@ -44,6 +46,9 @@ JANELA_Y = -4.0       # centro da janela abaixo da borda da tampa
 CURSO = 9.0           # deslocamento da lingueta entre fechada e aberta
 LING_COMP = 27.0      # comprimento da lingueta
 PINO = (4.0, 0.6)     # largura do pino de puxar e quanto passa dos lábios
+ESPIGA = (2.0, 3.0)   # espiga do pino (Z x Y), entra justa no furo da lingueta
+ESPIGA_FOLGA = 0.05   # folga do furo da espiga; aumente se não entrar
+ESPACO_MESA = 4.0     # distância entre as peças na mesa de impressão
 # versão fina
 FINA_ESP = 1.2        # espessura da aba da frente; tem que caber na fresta com o notebook fechado
 FINA_LARGURA = 40
@@ -85,11 +90,11 @@ def caixa(x0, x1, y0, y1, z0, z1):
 
 
 def clipe(lid):
-    """Clipe com trilho e lingueta, impresso deitado de lado (Z = largura, para cima).
+    """Clipe, lingueta e pino na posição montada, com a lingueta fechada.
 
-    A lingueta sai da mesa (z=0) na posição fechada. O lado z=0 do trilho é aberto
-    e quem segura a lingueta ali é o dente do lábio de cima, que trava o pino;
-    o lado de cima é fechado pela parede FIM_ESP, que limita a abertura.
+    Coordenadas da peça deitada de lado (Z = largura). O trilho é aberto em z=0,
+    por onde a lingueta entra; ali os lábios se unem numa barra (z < BARRA) que
+    barra o pino. Do outro lado, a parede FIM_ESP limita a abertura.
     """
     g = FOLGA_LING
     x_trilho = -FRENTE_ESP - 2 * g - LING_ESP          # fundo do trilho (face da frente da cavidade)
@@ -103,22 +108,46 @@ def clipe(lid):
     jan_y = (JANELA_Y - jh / 2, JANELA_Y + jh / 2)
     assert abertura_y[0] < jan_y[0] and jan_y[1] < abertura_y[1], "janela fora da abertura entre os lábios"
 
+    barra = 2.0
     corpo = perfil(lid).extrude(LARGURA)
     corpo += caixa(x_frente, -FRENTE_ESP + 0.01, -FRENTE_ALT, PONTE_ESP, 0, LARGURA)
     corpo -= caixa(x_trilho, -FRENTE_ESP, y_cav0, 0, -1, z_fim)                     # cavidade da lingueta
-    dente = 2.0                                                                       # dente no lábio de cima, em z<dente
-    corpo -= caixa(x_frente - 1, x_trilho + 0.01, abertura_y[0], abertura_y[1], dente, z_fim)
-    corpo -= caixa(x_frente - 1, x_trilho + 0.01, abertura_y[0], abertura_y[1] - 1.5, -1, dente + 0.01)
+    corpo -= caixa(x_frente - 1, x_trilho + 0.01, abertura_y[0], abertura_y[1], barra, z_fim)
     corpo -= caixa(-FRENTE_ESP - 1, 0.01, *jan_y, zc - jw / 2, zc + jw / 2)          # janela na aba da frente
 
     # lingueta na posição fechada: o furo dela fica CURSO abaixo da janela
     furo_z = zc - jw / 2 - CURSO
     assert furo_z + jw + 2 <= zc - jw / 2 and LING_COMP + CURSO + g <= z_fim, "curso ou comprimento incompatível"
+    pz = barra + g
+    ez, ey = ESPIGA
+    ec = ((abertura_y[0] + abertura_y[1]) / 2, pz + PINO[0] / 2)                    # centro da espiga (y, z)
+    espiga_furo = lambda folga, x0, x1: caixa(x0, x1, ec[0] - ey / 2 - folga, ec[0] + ey / 2 + folga,
+                                              ec[1] - ez / 2 - folga, ec[1] + ez / 2 + folga)
     ling = caixa(x_trilho + g, -FRENTE_ESP - g, *ling_y, 0, LING_COMP)
     ling -= caixa(x_trilho, -FRENTE_ESP, *jan_y, furo_z, furo_z + jw)
-    pz = dente + g
-    ling += caixa(x_frente - PINO[1], x_trilho + g + 0.01, abertura_y[0] + g, abertura_y[1] - g, pz, pz + PINO[0])
-    return corpo + ling
+    ling -= espiga_furo(ESPIGA_FOLGA, x_trilho, -FRENTE_ESP)
+    # pino: cabeça entre os lábios + espiga que não chega à face de trás da lingueta
+    pino = caixa(x_frente - PINO[1], x_trilho + g, abertura_y[0] + g, abertura_y[1] - g, pz, pz + PINO[0])
+    pino += espiga_furo(0, x_trilho + g - 0.01, -FRENTE_ESP - g - 0.15)
+    return corpo, ling, pino
+
+
+def mesa_normal(lid):
+    """As três peças lado a lado para uma impressão só, cada uma na melhor posição.
+
+    Clipe deitado de lado (perfil em "U" na mesa); lingueta deitada; pino com a
+    cabeça na mesa e a espiga para cima.
+    """
+    corpo, ling, pino = clipe(lid)
+    ling = ling.rotate((0, -90, 0))      # face da frente (menor X) vai para a mesa
+    pino = pino.rotate((0, -90, 0))
+    pecas, x = Manifold(), None
+    for p in (corpo, ling, pino):
+        bb = p.bounding_box()
+        x = bb[0] if x is None else x
+        pecas += p.translate((x - bb[0], -bb[1], -bb[2]))
+        x += bb[3] - bb[0] + ESPACO_MESA
+    return pecas
 
 
 def pontudo(z0, z1, y0, y1):
@@ -225,7 +254,7 @@ if __name__ == "__main__":
         os.makedirs(pasta, exist_ok=True)
     for lid in ESPESSURAS_TAMPA:
         nome = f"{lid:.1f}mm.stl".replace(".", "_", 1)
-        relatorio(clipe(lid), f"normal/tampa_webcam_{nome}", "tampa webcam")
+        relatorio(mesa_normal(lid), f"normal/tampa_webcam_{nome}", "tampa webcam")
         fino, curso = clipe_fino(lid)
         relatorio(fino, f"fina/tampa_fina_{nome}", "tampa webcam fina")
     print(f"curso da lingueta fina: {curso:.1f} mm")

@@ -74,14 +74,14 @@ Arquivos organizados em pastas:
 
 | Pasta | Conteúdo |
 |---|---|
-| `normal/` | `tampa_webcam_*mm.stl`, tampa com trilho e pino (frente de ~3,7 mm, tire para fechar o notebook) |
+| `normal/` | `tampa_webcam_*mm.stl`, clipe + lingueta + pino numa impressão só, montados depois (frente de ~3,7 mm, tire para fechar o notebook) |
 | `fina/` | `tampa_fina_*mm.stl`, frente de 1,2 mm, fecha o notebook com ela no lugar |
 | `gabaritos/` | `gabarito_espessura.stl` (espessura da tampa da tela) e `laminas_fresta.stl` (fresta com o notebook fechado) |
 | raiz | `tampa.py`, que gera tudo de novo nas pastas acima |
 
 ![guia da tampa de webcam](tampa-webcam-dell-inspiron-3520/normal/guia.png)
 
-Tampa de privacidade deslizante em forma de clipe. O "U" abraça a borda de cima da tela e sai sem ferramenta. A aba de trás é inclinada 0,8 mm para dentro e prende o clipe por pressão, sem cola. Na frente há uma janela sobre a câmera e um trilho com uma lingueta: empurrando o pino, o furo da lingueta passa para cima da janela (aberta) ou sai dela (fechada). A lingueta é impressa já dentro do trilho.
+Tampa de privacidade deslizante em forma de clipe. O "U" abraça a borda de cima da tela e sai sem ferramenta. A aba de trás é inclinada 0,8 mm para dentro e prende o clipe por pressão, sem cola. Na frente há uma janela sobre a câmera e um trilho com uma lingueta: empurrando o pino, o furo da lingueta passa para cima da janela (aberta) ou sai dela (fechada). Clipe, lingueta e pino saem na mesma impressão, lado a lado, e são montados depois.
 
 **Escolha o arquivo pela espessura da tampa (só a parte da tela, perto da câmera):**
 
@@ -91,9 +91,10 @@ Tampa de privacidade deslizante em forma de clipe. O "U" abraça a borda de cima
 | Não sabe | imprima `gabaritos/gabarito_espessura.stl` (fendas de 4,5 a 7,5 mm) e use a fenda mais estreita que entra sem forçar |
 | Outra medida | edite `ESPESSURAS_TAMPA` em `tampa.py` e gere de novo |
 
-- **Impressão:** deitado de lado como está no arquivo, com o perfil em "U" sobre a mesa (40 mm de altura), **sem suporte**. PLA ou PETG, camada de 0,12–0,16 mm, 100% de preenchimento. A lingueta tem 0,3 mm de folga em volta: calibre bem a primeira camada, senão ela gruda no clipe. Ao tirar da mesa, empurre o pino para soltá-la.
+- **Impressão:** as 3 peças já estão posicionadas no arquivo: clipe deitado de lado (perfil em "U" na mesa, 40 mm de altura), lingueta deitada e pino com a cabeça na mesa. **Sem suporte.** PLA ou PETG, camada de 0,12–0,16 mm, 100% de preenchimento.
+- **Montagem:** enfie a lingueta pela ponta aberta do trilho, do lado da barra que une os lábios. Depois encaixe a espiga do pino, pela abertura da frente, no furo quadrado da lingueta. O pino bate na barra de um lado e na parede do outro, então a lingueta não sai mais. Se o pino ficar frouxo, use uma gota de cola instantânea só na espiga.
 - **Uso:** encaixe com o trilho do lado da tela e a janela sobre a câmera. **Tire o clipe antes de fechar o notebook**, porque a frente tem cerca de 3,7 mm e pressionaria a tela.
-- **Ajuste:** clipe frouxo, imprima a medida menor seguinte ou aumente `APERTO`. Lingueta dura, aumente `FOLGA_LING` para 0,35–0,4. Janela fora da câmera, ajuste `JANELA_Y`. Aba invadindo a tela, diminua `FRENTE_ALT`.
+- **Ajuste:** clipe frouxo, imprima a medida menor seguinte ou aumente `APERTO`. Lingueta dura, aumente `FOLGA_LING` para 0,35–0,4. Pino não entra, aumente `ESPIGA_FOLGA` para 0,1–0,15. Janela fora da câmera, ajuste `JANELA_Y`. Aba invadindo a tela, diminua `FRENTE_ALT`.
   ```bash
   pip install manifold3d numpy
   python tampa.py
